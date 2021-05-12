@@ -1,0 +1,142 @@
+<html>
+<head>
+	<title> JS Car Driving</title>
+</head>
+<body>
+	<h2> 2D Car Driving</h2>
+	<canvas id="canvas" width="790" height="550"></canvas>
+	<script>
+	
+	var cvs=document.getElementById('canvas');
+	var ctx=cvs.getContext("2d");
+	
+	var araba = new Image();
+	var yol= new Image();
+	var engelAraba= new Image();
+	
+	araba.src="resimler/araba.png";
+	yol.src="resimler/yol.png";
+	engelAraba.src="resimler/engelAraba.png";
+		
+	var aX=10;
+	var aY=203;
+	
+	var kontrol=0;
+	var score=0;
+	var hiz=0;
+	
+	var scoreses=new Audio();
+	scoreses.src="sesler/score.mp3";
+	
+	var carpma=new Audio();
+	carpma.src="sesler/carpma.mp3";
+	
+	var kamyonses=new Audio();
+	kamyonses.src="sesler/kamyonsesi.mp3";
+	
+	var arabalar=[];
+	
+	arabalar[0]={
+		
+		x : cvs.width,
+		y : 125
+		
+	}
+	
+	function timeRefresh(timeoutPeriod) {
+            setTimeout("location.reload(true);",timeoutPeriod);
+        }
+		
+	function draw(){
+	
+		ctx.drawImage(yol,0,0);
+		for(var i=0;i<arabalar.length;i++){
+
+		ctx.drawImage(engelAraba,arabalar[i].x,arabalar[i].y);
+		
+		arabalar[i].x--;
+		if(arabalar[i].x==550){
+			arabalar.push({
+				x: cvs.width,
+				y: Math.floor(Math.random()*270)+125
+				});
+				kamyonses.play();
+		
+		}
+		
+		if((aX+araba.width)>=(790)){
+			carpma.play();
+			aY=203;
+			aX=10;
+			timeRefresh(200);
+		 }
+		 
+		if(aX<=0){
+			carpma.play();
+			aY=203;
+			aX=10;
+			timeRefresh(200);
+		}
+		if(aY>=410 || aY<=95){
+		carpma.play();
+			aY=203;
+			aX=10;
+			timeRefresh(200);
+		}
+		if((aX+araba.width)>=(arabalar[i].x)&&(aX)<=(arabalar[i].x+engelAraba.width)&&(aY+araba.height)>=(arabalar[i].y)&&(aY)<=(arabalar[i].y+engelAraba.height)) {
+			carpma.play();
+			aY=203;
+			aX=10;
+			timeRefresh(200);
+		}
+
+		if(aX>arabalar[i].x){
+			score=i+1;
+		}
+		
+		if(score>kontrol){
+			scoreses.play();
+			kontrol++;
+		}
+		
+	  }
+		
+		ctx.drawImage(araba,aX,aY);
+		
+		ctx.fillStyle="#ffffff";
+		ctx.font="23px WildWest";
+		ctx.fillText("Score : "+score,160,56);
+		
+		ctx.fillStyle="#ffffff";
+		ctx.font="23px WildWest";
+		ctx.fillText("Speed : "+hiz,310,56);
+		
+		requestAnimationFrame(draw);
+		
+	}
+	draw();
+	
+	document.onkeydown=move;
+	
+	function move(araba) {
+	if (araba.keyCode==37||araba.keyCode==65) {
+		aX-=4;
+		hiz-=2;
+		}
+	if(araba.keyCode==39||araba.keyCode==68){
+		aX+=4;
+		hiz+=2;
+		}
+	if (araba.keyCode==38||araba.keyCode==87){
+		aY-=4;
+		}
+	if(araba.keyCode==40||araba.keyCode==83){
+		aY+=4;
+		}
+}
+	
+	</script>
+</body>
+</html>
+
+
